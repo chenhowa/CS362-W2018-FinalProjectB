@@ -90,6 +90,81 @@ public class UrlValidatorTest {
     public void testIsValid()
     {
         //You can use this function for programming based testing
+                UrlValidator validator = new UrlValidator(null, null, UrlValidator.ALLOW_ALL_SCHEMES);
+        System.out.println("\n\n----- PROGRAMMATIC TESTING -----\n");
+        int i;
+
+        String myUrl = "http://www.aol.com/#?x=1 ";
+
+        System.out.println(testPart(validator, myUrl));
+
+        // available components (first 3 are good, last three are bad)
+        String[] schemes = {"http://", "ftp://", "", "aa:", "/////", "aolc"};
+        String[] authorities = {"www.aol.com", "www.biz.gov", "d.co", "ll", "", "//////"};
+        String[] ports = {"", ":8000", ":0", ":999999999", "abd", ":::"};
+        String[] paths = {"", "/oboe", "/oboe/", "///", "/#", "/.."};
+        String[] queries = {"", "?action=up", "?x=1", "?value=false", "?bobo=no", "?yes=ffS%"};
+
+        String url = "";
+
+        boolean check = true; // flag to see if URL should be invalid
+        int ranNum = 0;
+        boolean result;
+        // randomly generate urls and test on each run
+        for(i = 0; i < 100; i++){
+
+            url = ""; // reset url
+            check = true; // reset flag
+
+            // append random scheme
+            ranNum = (int) (Math.random() * 5);
+            if(ranNum > 2){
+                check = false;
+            }
+
+            url += schemes[ranNum];
+
+            // append random authority
+            ranNum = (int) (Math.random() * 5);
+            if(ranNum > 2){
+                check = false;
+            }
+
+            url += authorities[ranNum];
+
+            // append random port
+            ranNum = (int) (Math.random() * 5);
+            if(ranNum > 2){
+                check = false;
+            }
+
+            url += ports[ranNum];
+
+            // append random path
+            ranNum = (int) (Math.random() * 5);
+            if(ranNum > 2){
+                check = false;
+            }
+
+            url += paths[ranNum];
+
+            // append random query (doesn't change check flag because all are
+
+            ranNum = (int) (Math.random() * 5);
+
+            url += queries[ranNum];
+
+            try{
+                result = testPart(validator, url);
+                if((check != result)){
+                    failMessage(url + " returned " + result);
+                }
+            }
+            catch(Error e){
+                System.out.println(e);
+                System.out.println("Error occured with url: " + url);
+            }
+        }
 
     }
 
